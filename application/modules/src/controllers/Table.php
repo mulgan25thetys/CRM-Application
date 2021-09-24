@@ -47,7 +47,8 @@ class Table extends MX_Controller {
 		$output.= form_open('src/crud/search',array('id'=>'form_search','style'=>'margin-bottom:10px;'));
  		$output.='<input type="text" name="search-data" placeholder="search" id="search_data"/>';
  		$output.= form_close();
- 		$output.= form_open('src/crud/read',array('id'=>'table_show'));
+ 		$page = 1;
+ 		$output.= form_open('',array('id'=>'table_show'));
 		$output.='<div class="table-responsive" id="table_paginate" table-name="'.$table.'"></div>';
 		$output.= form_close();
 		$output.='<div style="margin-top:10px;" align="left">
@@ -63,7 +64,6 @@ class Table extends MX_Controller {
 
         //initier un modal contenant le formulaire d'insertion ou de modification de la table courante
         $output.=$this->get_ModalForm($table,$usetablefields);
-        $output.=$this->confirm_modal();
         //buttons de suppression  multiple
         
 		return $output;
@@ -105,6 +105,12 @@ class Table extends MX_Controller {
 		      	<div class="row"><div class="col-xs-12">
 		        '.$this->showRecord($table)/*appel du formulaire*/.'
 		      </div></div></div>
+		      <div class="modal-footer">
+				<button class="btn btn-sm btn-primary" data-dismiss="modal">
+					<i class="ace-icon fa fa-check"></i>
+					OK
+				</button>
+			</div>
 		    </div>
 		  </div>
 		</div>';
@@ -144,24 +150,6 @@ class Table extends MX_Controller {
         			<button id="delete_multiple" class="btn btn-white btn-warning btn-bold">
 					<i class="ace-icon fa fa-trash-o bigger-120 orange"></i>Delete</button>
 				</div>';
-		return $output;
-	}
-
-	function confirm_modal($value='')
-	{
-		$output = '';
-		$output.= '<div id="dialog-confirm" class="hide">
-					<div class="alert alert-info bigger-110">
-					Voulez-vous vraiment annuler cette opération!
-					</div>
-
-					<div class="space-6"></div>
-
-					<p class="bigger-110 bolder center grey">
-					<i class="ace-icon fa fa-hand-o-right blue bigger-120"></i>
-					Are you sure?
-					</p>
-					</div>';
 		return $output;
 	}
 	function switch_table_name($table){

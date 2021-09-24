@@ -9,16 +9,58 @@
 				try{ace.settings.loadState('main-container')}catch(e){}
 			</script>
 
-			<div id="sidebar" class="sidebar      h-sidebar                navbar-collapse collapse          ace-save-state">
+			<div id="sidebar" class="sidebar                  responsive                    ace-save-state">
 				<script type="text/javascript">
 					try{ace.settings.loadState('sidebar')}catch(e){}
 				</script>
+				
+				<div class="nav-wrap-up pos-rel">
+					<div class="nav-wrap">
+						<div style="position: relative; top: 0px; transition-property: top; transition-duration: 0.15s;">
+							<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+								<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+									<button data-toggle="dropdown" class="btn dropdown-toggle" class="btn btn-success">
+										Action
+										<span class="ace-icon fa fa-caret-down icon-on-right"></span>
+									</button> Configurations
 
-				<?php $this->load->view('nav-liste')?>
+									<ul class="dropdown-menu dropdown-default">
+										<li>
+											<a href="#">Type of billings</a>
+										</li>
+
+										<li>
+											<a href="#">Payements mode</a>
+										</li>
+									</ul>
+								</div>
+							</div><!-- /.sidebar-shortcuts -->
+							<?php $this->load->view('nav-liste'); ?>
+						</div>
+					</div>
+				</div>
+				
 			</div>
 
 			<div class="main-content">
 				<div class="main-content-inner">
+					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-barcode"></i>
+								<a href="#">Billings</a>
+							</li>
+						</ul><!-- /.breadcrumb -->
+
+						<div class="nav-search" id="nav-search">
+							<form class="form-search">
+								<span class="input-icon">
+									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+									<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+							</form>
+						</div><!-- /.nav-search -->
+					</div>
 					<div class="page-content">
 						<?php 
 						if ($this->session->flashdata('page_active') != null) {
@@ -59,10 +101,6 @@
 		</div><!-- /.main-container -->
 
 		<?php $this->load->view('view_js/default_js')?>
-
-			<?php if(!in_array($view_file,array('home','dashboard','history','sda'))) {
-				 $this->load->view($view_file_js);
-			} ?>
 
 		<?php $this->load->view('view_js/queryReq_js');?>
 	</body>

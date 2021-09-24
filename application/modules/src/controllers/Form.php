@@ -79,7 +79,7 @@ class Form extends MX_Controller {
 			}
 		}		
 		$output.='</br>';
-		$output.='<button type="submit" class="btn btn-success btn_submit_'.$table.'">Save</button>';
+		$output.='<button type="submit" class="btn btn-success btn_submit_'.$table.'">Save '.$table.'</button>';
 		$output.=form_close();//fin du formulaire
 		return $output;
 	}

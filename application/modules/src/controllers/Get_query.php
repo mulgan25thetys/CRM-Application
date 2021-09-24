@@ -21,6 +21,12 @@ class Get_query extends MX_Controller {
 		}
     }
 
+    function get_token(){
+    	if ($this->input->is_ajax_request()) {
+    		echo json_encode(array('token'=>$this->security->get_csrf_hash()));
+    	}
+    }
+
     function get_Table_fields($table='')
     {
     	switch ($table) {

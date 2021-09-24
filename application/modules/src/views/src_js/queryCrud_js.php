@@ -6,7 +6,8 @@
     var currentPage = $(location).attr('pathname');
     var message     = $("#message");
     var inputs      = $('input').attr('class');
-    var pathArray   = window.location.pathname.split('/');
+
+    console.log(currentPage);
     $('input[name=_ci_csrf_token]').addClass('csrfName');
     var csrfName = $('.csrfName').attr('name');
     var csrfValue = $('.csrfName').val();
@@ -32,7 +33,19 @@
     function reloadpage(){
         setInterval(function () {
             location.reload();
-        },2000);
+        },1000);
+    }
+
+    function regenerate_token(){
+        $.ajax({
+            url:'<?php echo base_url();?>src/get_query/get_token',
+            dataType:'json',
+            success:function(resp) {
+                $(".csrfName").val(resp.token);
+                console.log(resp.token);
+            },
+            error:function (){toastr.error('Nous ne  pouvons pas éffectuer cette opération!');}
+        });
     }
 
     $(document).ready(function(){
@@ -120,12 +133,14 @@
      formInsert.submit(function(e){
 
         e.preventDefault();
+        //regenerate_token();
         load_crud_ajax_request($(this).attr('action'),$(this).serialize(),'Insertion','InsertForm',formInsert);
     });
 
     //mofification
     formEdit.submit(function(e){
         e.preventDefault(); 
+        ///regenerate_token();
         load_crud_ajax_request($(this).attr('action'),$(this).serialize(),'Modification','EditForm',formEdit);
     });
     //permet de faire la suppremssion d'une données
@@ -158,15 +173,15 @@
             data:data,
             beforeSend:function(){//avant d'envoyer lancer le loader
                 $(".btn_submit_"+table).prop('disabled',true);
-                $(".btn_submit_"+table).html(load_loader('white'," En attente..."));
+                $(".btn_submit_"+table).html(load_loader('white',"Saving ..."));
             },
             complete:function(){//a la fin de l'envoie cacher le loader
                 $(".btn_submit_"+table).prop('disabled',false);
-                $(".btn_submit_"+table).html('Save');
+                $(".btn_submit_"+table).html('Save '+table);
             },
             success:function(resp){//en cas de success recuperation des données envoyer depuis php
-                $('.csrfName').val(resp.token);
-
+                // $('.csrfName').val(resp.token);
+                regenerate_token();
                 if(resp.response == "success"){//si la reponse envoyer par le serveur egale success alors
                     //fetch(1,csrfName,csrfValue);
                     $("#"+modalform).modal('hide');
@@ -175,7 +190,8 @@
                     message.html('');
                     $('.fieldset').removeClass('is-invalid').removeClass('is-valid');
                     $('.text-danger').remove();
-                    reloadpage();
+                    //reloadpage();
+                    fetch(1,csrfName,csrfValue);
                 }else{//sinon
                     
                      $.each(resp.message, function (key, value){
@@ -192,7 +208,7 @@
                     $(".close").removeAttr('arial-label');
                     $(".close").on('click',function (e) {
                         e.preventDefault();
-                        confirmation();
+                        confirmation(form);
                     });
                 }
             },
@@ -202,34 +218,22 @@
 
         });
     }
-    function confirmation(){
-        $( "#dialog-confirm" ).removeClass('hide').dialog({
-            resizable: false,
-            width: '320',
-            modal: true,
-            title: "Annulation",
-            title_html: true,
-            buttons: [
-                {
-                    html: "Continue!",
-                    "class" : "btn btn-danger btn-minier",
-                    click: function() {
-                        $( this ).dialog( "close" );
-                        $("#InsertForm").modal( "hide" );
-                        reloadpage();
-                    }
-                }
-                ,
-                {
-                    html: "<i class='ace-icon fa fa-times bigger-110'></i>&nbsp; Cancel",
-                    "class" : "btn btn-minier",
-                    click: function() {
-                        $( this ).dialog( "close" );
-                    }
-                }
-            ]
-        });
+    function confirmation(form){
+        swal({//permet d'afficher un message d'avertissement avant suppression
+              title: "Annulation?",
+              text: "Voulez-vous annuler cette opération!",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            }).then((willok) => {//en cas de confirmation lancer le proceccus de suppression
+              if (willok) {
+                form[0].reset();
+                $("#InsertForm").modal( "hide" );
+                reloadpage();
+              } 
+            });
     }
+
     $('.reload').on('click',function (e) {
         e.preventDefault();
         fetch(1,csrfName,csrfValue);
@@ -238,35 +242,33 @@
     $(document).on('click',"#edit",function(e){
         $(this).addClass('editup');
         e.preventDefault();
-        console.log(table);
         $(".message_campaign_id ").html('');
         var idedit = $(this).attr('value');
-        load_query_ajax_request('<?= base_url()?>src/crud/get_entry','GET',{table: table, id:idedit,[csrfName]:csrfValue},'Mise à jour');
+        load_query_ajax_request('<?= base_url()?>src/crud/get_entry','POST',{table: table, id:idedit,[csrfName]:csrfValue},'Mise à jour');
     });
     $(document).on('click','#show',function(e){
         e.preventDefault();
         $(".message_campaign_id ").html('');
         var idshow = $(this).attr('value');
-        //console.log(csrfName," ",csrfValue);
         load_query_ajax_request('<?= base_url()?>src/crud/get_entry','POST',{table: table, id:idshow,[csrfName]:csrfValue},'Show');
     });
     //d'afficher les tous les enregistrement de la table
     function fetch(page,csrfName,csrfValue) {
+        var path   = window.location.pathname;
         var table       = $("#table_paginate").attr("table-name");
-        //console.log(csrfName," ",csrfValue);
-        load_query_ajax_request($("#table_show").attr('action'),'POST',{page:page,table:table,[csrfName]:csrfValue},'Affichage');
+        load_query_ajax_request('<?=base_url()?>call/campaign/read/'+page,'POST',{page:1,table:table,[csrfName]:csrfValue},'Affichage');
     }
     
     //permet de faire une recherche dans un module données
     function Load_Data(data=''){
         var table       = $("#table_paginate").attr("table-name");
-        load_query_ajax_request($("#form_search").attr('action'),'GET',{query:data,table:table},'Recherche');
+        load_query_ajax_request($("#form_search").attr('action'),'POST',{query:data,table:table},'Recherche');
     }
 
     //permet de charger les valeurs a verifier
     function Load_value(caller,message){
         var tablename       = $("#table_paginate").attr("table-name");
-        load_query_ajax_request('<?= base_url() ?>src/crud/realTime_checkValue','GET',{table:tablename,value:caller.val()},'Vérification');
+        load_query_ajax_request('<?= base_url() ?>src/crud/realTime_checkValue','POST',{table:tablename,value:caller.val()},'Vérification');
     }
     //permet de faire une suppression multiple
     function multiple_delete(){
@@ -275,7 +277,7 @@
             return $(this).val();
         }).get().join('/');
 
-        load_query_ajax_request('<?= base_url() ?>src/crud/delete_multiple','GET',{id:id,table:tablename},'Suppresion multiple');
+        load_query_ajax_request('<?= base_url() ?>src/crud/delete_multiple','POST',{id:id,table:tablename},'Suppresion multiple');
     }
 
     function load_query_ajax_request(url,method,data,type){
@@ -295,7 +297,7 @@
                 $(".widget-box-overlay").hide();
             },
             success:function(resp){//en cas de success recuperation des données envoyer depuis php
-                $('.csrfName').val(resp.token);
+                regenerate_token();
                 switch (type) {
                     case 'Mise à jour':
                         if(resp.response == "success"){
@@ -322,7 +324,7 @@
                         if(resp.response == "success"){
                             swal(resp.message, {icon: "success",});//afficher le message de success
                             fetch(1,csrfName,csrfValue);
-                            reloadpage();
+                            //reloadpage();
                         }else{//sinon
                            toastr.error(resp.message, type);
                         }

@@ -43,7 +43,7 @@ class Menu extends MX_Controller {
        			<ul class="nav navbar-nav">';
        		    foreach ($query->result() as $value) {
        		    	//Activer un desactiver un menu par defaut
-       		    	if($value->parent_id == 0){	
+       		    	if($value->parent_id == 0 && $value->title != 'Settings'){	
        		    		switch ($value->status) {
        		    				case 1:
        		    						$Outside_default_menu.=$this->active_default_menu($value->title,$value->page,$value->icon,$defaultpage);
@@ -183,8 +183,41 @@ class Menu extends MX_Controller {
        	return $sub_menu;
 	}
 
+	//retourne le menu de la configuration (paramétres)
+	function get_config_menu($parent='',$parentid=''){
+		$query = $this->Mdl_menu->get_sub_menu($parentid);
+       	$Outside_sub_menu     = "";
+       	if ($query->num_rows()> 0) {
+       		
+       		$submenu = $this->check_user_menu($query->result_array());
+       		$Outside_sub_menu.='<ul class="nav nav-list">';
+       			foreach($submenu as $value) {
+       				if ($this->url[2] == $value['page']) {
+       					$Outside_sub_menu.='<li class="hover active"><a href="';
+       					$this->session->set_flashdata('page_active', $value['title']);
+       				}else{
+       					$Outside_sub_menu.='<li class="hover"><a href="';
+       				}
+					if($value['page'] != null){
+						// 
+						$Outside_sub_menu.=base_url().'settings/'.$parent.'/'.$value['page'];
+                    }else{
+                    	$Outside_sub_menu.="#";
+                    }
 
+					$Outside_sub_menu.='"><i class="menu-icon fa fa-'.$value['icon'].'"></i>
+					    <span class="menu-text">'.$value['title'].'</span></a><b class="arrow"></b>';
+                    $Outside_sub_menu.= $this->get_sub_menu($value['id']);
+					$Outside_sub_menu.='</li>';
+       			}
+       		$Outside_sub_menu.='</ul>';
+       	}else {
+       		$Outside_sub_menu = '<div class="alert alert-info">Aucun sous menu existant!</div>';
+       	}
+       	return $Outside_sub_menu;
+	}
 }
+
 
 /* End of file Custommenu.php */
 /* Location: ./application/modules/custommenu/controllers/Custommenu.php */

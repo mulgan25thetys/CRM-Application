@@ -5,13 +5,15 @@ class Mdl_src extends CI_Model {
 
 	protected $user='unknown';
 	protected $manager = 0;
+	protected $role = 0;
 	function __construct()
 	{
 		parent::__construct();
 
 		if ($this->session->userdata('online' ) == 'Y') {
 			$this->user = $this->session->userdata('username');
-			$this->manager = $this->session->userdata('id');
+			$this->manager = $this->session->userdata('manager');
+			$this->role = $this->session->userdata('role');
 		}
 	}
 	//permet de retourner le nom de la table si elle existe
@@ -50,7 +52,7 @@ class Mdl_src extends CI_Model {
 	}
 	
 	function get_menu_id($menuLink=''){
-       $query=$this->db->where('page',$menuLink)->get($this->getTable('custommenu'));
+       $query=$this->db->where('page',$menuLink)->get($this->getTable('menu'));
        if ($query->num_rows() > 0) {
        	  foreach ($query->result() as  $value) {
        	  	return $value->id;
@@ -96,7 +98,14 @@ class Mdl_src extends CI_Model {
 		$this->db->select("*");
 		$this->db->from($this->getTable($table));
 		if (in_array($table, array('campaign'))) {
-			$this->db->where('author',$this->user);
+			if ($this->role == 3) {
+				$agentname = $this->db->select('pseudo')->from($this->getTable('user'))->where('manager',$this->manager)->get();
+				$where = array('author'=>$this->user,'author'=>$agentname->row()->pseudo);
+			}else{
+				$where = array('author'=>$this->user);
+			}
+			
+			$this->db->where($where);
 		}
 		if($table == 'user'){
 			$this->db->where('manager',$this->manager);

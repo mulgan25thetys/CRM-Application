@@ -14,7 +14,7 @@ class Crud extends MX_Controller {
 	//permet de retourner un enregistrement demandé a partir de son id
 	function get_entry(){
 		if ($this->input->is_ajax_request()) {
-			$post = $this->input->get();
+			$post = $this->input->post();
 			$query = $this->mdl_src->get_entry($post['table'],$post['id']);
 			if ($query != null) {
 				$this->session->set_flashdata('idedit', $post['id']);
@@ -50,11 +50,11 @@ class Crud extends MX_Controller {
 			if (!in_array($key, array('description'))) {
 				switch ($key) {
 					case 'campaign_id':
-						$this->form_validation->set_rules('campaign_id', 'campaign_id','trim|required|min_length[6]|max_length[12]');
+						$this->form_validation->set_rules('campaign_id', 'campaign_id','trim|required|min_length[6]|max_length[12]|xss_clean');
 						break;
 					
 					default:
-						$this->form_validation->set_rules($key, $key, 'required');
+						$this->form_validation->set_rules($key, $key, 'trim|required|xss_clean');
 						break;
 				}
 			}
@@ -166,6 +166,7 @@ class Crud extends MX_Controller {
 			} else {
 				$data = array('response'=>'error','message'=> 'L\'opération a échouée!');
 			}
+			$data['token'] = $this->security->get_csrf_hash();
 			echo json_encode($data);
 		} else {
 			echo "<h1>No direct script access allowed</h1>";
@@ -189,7 +190,7 @@ class Crud extends MX_Controller {
 	function debug($value='')
 	{
 		echo "<pre>";
-		print_r ($this->security->get_csrf_hash());
+		print_r (explode('/', uri_string()));
 		echo "</pre>";
 	}
 	//permet d'activer ou de desactiver une ligne d'une table 
@@ -218,12 +219,12 @@ class Crud extends MX_Controller {
 	}
 	//permet de faire l'affichage des données
 	function read(){
-		if ($this->input->is_ajax_request()) {
+		
 			$this->load->library('pagination');
 			$config = array();
 			$config["base_url"] ="#";
 			$config["total_rows"]=$this->mdl_src->count_all($_POST['table']);
-			$config["per_page"]=10;
+			$config["per_page"]=5;
 			$config["uri_segment"]=3;
 			$config["use_page_numbers"]=TRUE;
 			$config["num_tag_open"]='<li>';
@@ -244,9 +245,9 @@ class Crud extends MX_Controller {
 			$config["prev_tag_close"]='</li>';
 			$config["num_links"]=1;
 			$this->pagination->initialize($config);
-			$page = $this->uri->segment(3);
+			$page = 2;
 
-			$start = (1 - 1 )*$config['per_page'];
+			$start = (intval($page) - 1 )*$config['per_page'];
 
 			$query 	= $this->mdl_src->fetch_details($config['per_page'],$start,$_POST['table']);
 			$fields = $this->get_query->get_Table_fields($_POST['table']);
@@ -257,9 +258,7 @@ class Crud extends MX_Controller {
 
 			$output['token']=$this->security->get_csrf_hash();
 			echo json_encode($output);
-		} else {
-			echo "<h1>No direct script access allowed</h1>";
-		}		
+				
 	}
 
 	//permet de faire un recherche dans une table
@@ -268,10 +267,10 @@ class Crud extends MX_Controller {
 		$post = $this->input->post();
 
 		$data = array('response' => 'error','result'=>array(),'token','');
-		$query 	= $this->mdl_src->search_entry($_GET['table'],$_GET['query']);
-		$fields = $this->get_query->get_Table_fields($_GET['table']);
+		$query 	= $this->mdl_src->search_entry($post['table'],$post['query']);
+		$fields = $this->get_query->get_Table_fields($post['table']);
 		$data['response'] = 'success';
-		$data['result']   = $this->switch_table_row($_GET['table'],$fields,$query);
+		$data['result']   = $this->switch_table_row($post['table'],$fields,$query);
 
 		$data['token']=$this->security->get_csrf_hash();
 		echo json_encode($data);

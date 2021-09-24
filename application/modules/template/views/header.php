@@ -72,9 +72,39 @@
 					</a>
 					<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 						<li>
+							<a href="<?=base_url()?>settings/billings/invoices">
+								<i class="ace-icon fa fa-barcode"></i>
+								Billings
+							</a>
+						</li>
+						<li>
 							<a href="#">
-								<i class="ace-icon fa fa-cog"></i>
-								Settings
+								<i class="ace-icon fa fa-users"></i>
+								Supports
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<i class="ace-icon fa fa-bell-o"></i>
+								Notifications
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<i class="ace-icon fa fa-envelope-o"></i>
+								Messages
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<i class="ace-icon fa fa-credit-card"></i>
+								Credits
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<i class="ace-icon fa fa-cogs"></i>
+								Services
 							</a>
 						</li>
 					</ul>

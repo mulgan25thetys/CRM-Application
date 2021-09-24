@@ -7,6 +7,10 @@ class Template extends MX_Controller {
     {
     	$this->load->view('theme_default/public_html',$data,FALSE);
     }
+    function tpl_settings($data=null)
+    {
+    	$this->load->view('theme_settings/public_html',$data,FALSE);
+    }
 	function tpl_auth($data=null)
 	{
 		$this->load->view('theme_auth/public_html',$data,FALSE);

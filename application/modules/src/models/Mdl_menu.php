@@ -21,13 +21,13 @@ class Mdl_menu extends CI_Model {
 		}		
 	}
 	function getMenus_items($value=''){
-		return $this->db->get($this->getTable('custommenu'));
+		return $this->db->get($this->getTable('menu'));
 	}
 	function get_sub_menu($parentid=''){
-      return $this->db->where('parent_id',$parentid)->get($this->getTable('custommenu'));
+      return $this->db->where('parent_id',$parentid)->get($this->getTable('menu'));
 	}
 	function getParent_men($id){
-		return $this->db->where('id',$id)->get($this->getTable('custommenu'));
+		return $this->db->where('id',$id)->get($this->getTable('menu'));
 	}
 
 }

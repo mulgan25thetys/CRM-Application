@@ -431,7 +431,7 @@ $config['csrf_token_name'] = '_ci_csrf_token';
 $config['csrf_cookie_name'] = '_ci_csrf_name';
 $config['csrf_expire'] = 7200;
 $config['csrf_regenerate'] = TRUE;
-$config['csrf_exclude_uris'] = array();
+$config['csrf_exclude_uris'] = array('src/crud/read','src/crud/get_entry','src/crud/edit','src/crud/insert','src/crud/search');
 
 /*
 |--------------------------------------------------------------------------

@@ -28,14 +28,19 @@ class Req_query extends MX_Controller {
 		$data['forgot_password'] = $forgot_password;
 		$data['module']    =  $module;
 		$data['view_file'] = $view_file;
+		$data['view_file_js'] = 'src/src_js/queryCrud_js';
 		$data['menu']      = $this->menu->get_default_Menu('dashboard');
 		if($submenu == '')
 			$data['sub_menu']  = '';
 		else{
-			$parent_page = $this->get_query->get_URl()[0];
+			$parent_page =($module == 'settings') ? $this->get_query->get_URl()[1] : $this->get_query->get_URl()[0] ;
 		    $menuid=$this->mdl_src->get_menu_id($parent_page);
 		    if ($menuid == $submenu) {
-		    	$data['sub_menu'] = $this->menu->get_sub_default_menu($parent_page,$submenu);
+		    	if($module == 'settings'){
+		    		$data['sub_menu'] = $this->menu->get_config_menu($parent_page,$submenu);
+		    	}else{
+		    		$data['sub_menu'] = $this->menu->get_sub_default_menu($parent_page,$submenu);
+		    	}
 		    }else{
 		    	$data['sub_menu'] = '<div class="alert alert-info">Veuillez définir les sous menus!</div>';
 		    }

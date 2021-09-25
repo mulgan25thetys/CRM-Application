@@ -60,7 +60,7 @@
 
 		<?php $this->load->view('view_js/default_js')?>
 
-			<?php if(!in_array($view_file,array('home','dashboard','history','sda'))) {
+			<?php if(!in_array($view_file,array('home','dashboard','history','sda','account'))) {
 				 $this->load->view($view_file_js);
 			} ?>
 

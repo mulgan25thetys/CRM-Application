@@ -6,8 +6,6 @@
     var currentPage = $(location).attr('pathname');
     var message     = $("#message");
     var inputs      = $('input').attr('class');
-
-    console.log(currentPage);
     $('input[name=_ci_csrf_token]').addClass('csrfName');
     var csrfName = $('.csrfName').attr('name');
     var csrfValue = $('.csrfName').val();
@@ -42,7 +40,6 @@
             dataType:'json',
             success:function(resp) {
                 $(".csrfName").val(resp.token);
-                console.log(resp.token);
             },
             error:function (){toastr.error('Nous ne  pouvons pas éffectuer cette opération!');}
         });
@@ -180,7 +177,7 @@
                 $(".btn_submit_"+table).html('Save '+table);
             },
             success:function(resp){//en cas de success recuperation des données envoyer depuis php
-                // $('.csrfName').val(resp.token);
+                console.log(resp.data);
                 regenerate_token();
                 if(resp.response == "success"){//si la reponse envoyer par le serveur egale success alors
                     //fetch(1,csrfName,csrfValue);
@@ -256,7 +253,7 @@
     function fetch(page,csrfName,csrfValue) {
         var path   = window.location.pathname;
         var table       = $("#table_paginate").attr("table-name");
-        load_query_ajax_request('<?=base_url()?>call/campaign/read/'+page,'POST',{page:1,table:table,[csrfName]:csrfValue},'Affichage');
+        load_query_ajax_request('<?= base_url()?>call/campaign/read/'+page,'GET',{page:1,table:table,[csrfName]:csrfValue},'Affichage');
     }
     
     //permet de faire une recherche dans un module données
@@ -300,8 +297,16 @@
                 regenerate_token();
                 switch (type) {
                     case 'Mise à jour':
+                        var chk_box_arry = ['recording','answering_machine_detection'];
                         if(resp.response == "success"){
                             for(var i in resp.message){
+                                if(chk_box_arry.includes(i)){
+                                    if(resp.message[i] == "on"){
+                                        $("#"+i).attr('checked',"true");
+                                    }else{
+                                        $("#"+i).removeAttr('checked');
+                                    }
+                                }
                                 $("#"+i).val(resp.message[i]);
                             }
                             $("#EditForm").modal('show');

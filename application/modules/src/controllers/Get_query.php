@@ -16,7 +16,7 @@ class Get_query extends MX_Controller {
 
     function check_cnx(){
 		$online = $this->session->userdata('online');
-		if ($online != 'Y') {
+		if ($online == null && $online !='Y') {
 			redirect('auth/login','refresh');
 		}
     }

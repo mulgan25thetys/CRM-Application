@@ -17,7 +17,7 @@ class Crud extends MX_Controller {
 			$post = $this->input->post();
 			$query = $this->mdl_src->get_entry($post['table'],$post['id']);
 			if ($query != null) {
-				$this->session->set_flashdata('idedit', $post['id']);
+				$this->session->set_userdata('idedit', $post['id']);
 				$data = array('response' => 'success','message'=> $query);//retoruner les valeurs du champs de l'enregistrement
 			} else {
 				$data = array('response' => 'error','message'=> 'Cet enregistrement n\'exite pas!');
@@ -137,17 +137,26 @@ class Crud extends MX_Controller {
 			$table = $posts['table'];
 			unset($posts['_ci_csrf_token']);
 			unset($posts['table']);
-			$idedit = $this->session->flashdata('idedit');
+			$idedit = $this->session->userdata('idedit');
 			$fields = $this->mdl_src->getTable_field($table);
 
 			for ($i=0; $i < count($fields); $i++) { 
 				if(array_keys(explode('_', $fields[$i]),'date') || array_keys(explode('_',$fields[$i]),'time')){
 					$posts[$fields[$i]] = date("Y-m-d H:i:s", strtotime($posts[$fields[$i]]));
 				}
-			}
+
+				if(in_array($fields[$i],array('recording','answering_machine_detection'))){
+					if (isset($posts[$fields[$i]])) {
+						$posts[$fields[$i]] = "on";
+					}else{
+						$posts[$fields[$i]] = "off";
+					}
+				}
+			} 
 			
 			if($this->mdl_src->edit($table,$idedit,$posts)){
 				$data = array('response' => 'success');
+				$this->session->unset_userdata('idedit');//destruction de l'id edit
 			}else{ $data = array('response' => 'error', 'message' => 'L\'operation a echouée!');}
 			$data['data'] = $posts;
 			$data['token']=$this->security->get_csrf_hash();

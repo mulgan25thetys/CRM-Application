@@ -17,24 +17,6 @@
 				<div class="nav-wrap-up pos-rel">
 					<div class="nav-wrap">
 						<div style="position: relative; top: 0px; transition-property: top; transition-duration: 0.15s;">
-							<div class="sidebar-shortcuts" id="sidebar-shortcuts">
-								<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-									<button data-toggle="dropdown" class="btn dropdown-toggle" class="btn btn-success">
-										Action
-										<span class="ace-icon fa fa-caret-down icon-on-right"></span>
-									</button> Configurations
-
-									<ul class="dropdown-menu dropdown-default">
-										<li>
-											<a href="#">Type of billings</a>
-										</li>
-
-										<li>
-											<a href="#">Payements mode</a>
-										</li>
-									</ul>
-								</div>
-							</div><!-- /.sidebar-shortcuts -->
 							<?php $this->load->view('nav-liste'); ?>
 						</div>
 					</div>
@@ -48,7 +30,7 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="ace-icon fa fa-barcode"></i>
-								<a href="#">Billings</a>
+								<a href="#"><?=  ucfirst($parent_page);?></a>
 							</li>
 						</ul><!-- /.breadcrumb -->
 

@@ -3,14 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Call_Mdl extends CI_Model {
 
-	protected $user='unknown';
+	protected $user='';
 	protected $manager = 0;
 	protected $role = 0;
 	function __construct()
 	{
 		parent::__construct();
 
-		if ($this->session->userdata('online' ) == 'Y') {
+		if ($this->session->userdata('online' ) != null && $this->session->userdata('online' ) == 'Y') {
 			$this->user = $this->session->userdata('username');
 			$this->manager = $this->session->userdata('id');
 			$this->role = $this->session->userdata('role');
@@ -56,29 +56,30 @@ class Call_Mdl extends CI_Model {
 		}
 		return $query->num_rows()+$plus; //retourner le nombre
 	}
+	function get_agents_name(){
+		$this->db->select('pseudo');
+		$this->db->from($this->getTable('user'));
+		$this->db->where('manager',$this->manager);
+		return $this->db->get();
+	}
 	//permet de retoruner 
 	function fetch_details($limit='',$start,$table)
 	{	
 		$this->db->select("*");
 		$this->db->from($this->getTable($table));
-		if (in_array($table, array('campaign'))) {
-			if ($this->role == 13) {
-					$this->db->select('pseudo');
-					$this->db->from($this->getTable('user'));
-					$this->db->where('manager',$this->manager);
-				$agentname = $this->db->get();
-				$name = array();
-				foreach ($agentname->result() as $value) {
-					array_push($name, $value->pseudo);
+		if (in_array($table, array('campaign'))) {//si c'est une table campaign
+			if ($this->role == 31) {//si c'est un administrateur
+				$agentnames = $this->get_agents_name();//recuperations du nom des agents 
+				$names = array();
+				foreach ($agentnames->result() as $value) {
+					array_push($names, $value->pseudo);//inserer les noms des agents dans un tableaux
 				}
-				$where = $name;
+				$this->db->where_in('author',$names);//executer la condition
 			}else{
-				$where = array($this->user);
+				$this->db->where('author',$this->user);
 			}
-			
-			$this->db->where_in('author',$where);
 		}
-		if($table == 'user'){
+		else if($table == 'user'){//si c'est la table user
 			$this->db->where('manager',$this->manager);
 		}
 		$this->db->order_by("id","DESC");

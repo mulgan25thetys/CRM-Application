@@ -3,14 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Mdl_src extends CI_Model {
 
-	protected $user='unknown';
+	protected $user='';
 	protected $manager = 0;
 	protected $role = 0;
 	function __construct()
 	{
 		parent::__construct();
 
-		if ($this->session->userdata('online' ) == 'Y') {
+		if ($this->session->userdata('online') != null && $this->session->userdata('online') == 'Y') {
 			$this->user = $this->session->userdata('username');
 			$this->manager = $this->session->userdata('manager');
 			$this->role = $this->session->userdata('role');

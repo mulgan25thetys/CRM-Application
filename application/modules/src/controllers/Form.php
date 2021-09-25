@@ -97,7 +97,7 @@ class Form extends MX_Controller {
 			    	</select>';
 
 		}else if(in_array($field, array('recording','answering_machine_detection'))){
-			$output.='<label><input type="checkbox" value="on" offval="off" name="'.$field.'" '.$this->set_id_value($field,$type).' class="ace ace-switch ace-switch-3" /> <span class="lbl middle"></span></label>';
+			$output.='<label><input type="checkbox" name="'.$field.'" '.$this->set_id_value($field,$type).' value="on" offval="off" class="ace ace-switch ace-switch-3"><span class="lbl middle"></span></input></label>';
 
 		}else{
 		switch ($field) {//switcher les champs du form et faire un rendu selon les type de champs

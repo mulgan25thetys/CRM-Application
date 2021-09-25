@@ -1,11 +1,27 @@
 <script type="text/javascript">
-	
+	var current_url = window.location.href;
+
 	$(document).ready(function (argument) {
-		
+		navigation(current_url);
+		var homepage  = '<?php echo base_url(); ?>';
+		if(homepage === current_url){
+			$("#menu-toggler").hide();
+		}
 		//apres le chargement de la page lancer la function Statistic_table pour recupere les données d'une table afin de faire la statique
 		Statistic_table('campaign');
 		Statistic_table('user');
 	});	
+
+	function navigation(current_url){
+		$(document).on('click','.navigation',function(e){
+			e.preventDefault();
+			var this_link_url    = $(this).attr('href');
+
+			if(current_url !== this_link_url){
+				location.href = this_link_url;
+			}
+		});
+	}
 
 	//permet d'afficher les informations statiques a propos de la campagne realiser
 	function TableAnalytic(tablename,nbrtotal,actifItems){

@@ -79,7 +79,7 @@ class Menu extends MX_Controller {
 	function active_default_menu($title,$page,$icon,$defaultpage){
 		$output='';
 		if ($this->url[0] && $this->url[0] == $page.'') {
-    		$output.='<li class="active"><a href="';
+    		$output.='<li class="active"><a class="navigation" href="';
     	} else {
     		$output.='<li ><a href="';
     	}
@@ -95,7 +95,7 @@ class Menu extends MX_Controller {
 	//retoune un defaut menu desactivé
 	function inactive_default_menu($title,$icon){
 		$output='';
-		$output.='<li ><a style="color: currentColor;
+		$output.='<li ><a class="navigation" style="color: currentColor;
 								  cursor: not-allowed;
 								  opacity: 0.5;
 								  text-decoration: none;" href="';
@@ -114,7 +114,7 @@ class Menu extends MX_Controller {
        		$Outside_sub_menu.='<ul class="nav nav-list">';
        			foreach($submenu as $value) {
        				if ($this->url[1] == $value['page']) {
-       					$Outside_sub_menu.='<li class="hover active"><a href="';
+       					$Outside_sub_menu.='<li class="hover active"><a class="navigation" href="';
        					$this->session->set_flashdata('page_active', $value['title']);
        				}else{
        					$Outside_sub_menu.='<li class="hover"><a href="';
@@ -167,7 +167,7 @@ class Menu extends MX_Controller {
        	if ($query->num_rows() > 0) {
        		$sub_menu.='<ul class="submenu">';
        		foreach ($query->result() as $value) {
-       			$sub_menu.='<li class="hover"><a href="';
+       			$sub_menu.='<li class="hover"><a class="navigation" href="';
        			if($value->page != null){
        				$sub_menu.=base_url()."auth/".$value->page;
        			}
@@ -193,10 +193,10 @@ class Menu extends MX_Controller {
        		$Outside_sub_menu.='<ul class="nav nav-list">';
        			foreach($submenu as $value) {
        				if ($this->url[2] == $value['page']) {
-       					$Outside_sub_menu.='<li class="hover active"><a href="';
+       					$Outside_sub_menu.='<li class="hover active"><a class="navigation" href="';
        					$this->session->set_flashdata('page_active', $value['title']);
        				}else{
-       					$Outside_sub_menu.='<li class="hover"><a href="';
+       					$Outside_sub_menu.='<li class="hover"><a class="navigation" href="';
        				}
 					if($value['page'] != null){
 						// 

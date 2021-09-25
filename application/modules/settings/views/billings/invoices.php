@@ -49,7 +49,7 @@
 
                                     <li>
                                         <i class="ace-icon fa fa-caret-right blue"></i>
-Phone:
+                                        Phone:
                                         <b class="red">111-111-111</b>
                                     </li>
 

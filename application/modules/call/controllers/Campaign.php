@@ -35,7 +35,7 @@ class Campaign extends MX_Controller {
 		$this->load->library('pagination');
 			$config = array();
 			$config["base_url"] ="#";
-			$config["total_rows"]=$this->call_Mdl->count_all($_POST['table']);
+			$config["total_rows"]=$this->call_Mdl->count_all($_GET['table']);
 			$config["per_page"]=5;
 			$config["uri_segment"]=3;
 			$config["use_page_numbers"]=TRUE;
@@ -48,7 +48,7 @@ class Campaign extends MX_Controller {
 			$config["first_tag_open"]='<li>';
 			$config["first_tag_close"]='</li>';
 			$config["last_tag_open"]='<li>';
-			$config["last_tag_close"]='</li>';
+			$config["last_tag_close"]='</li>'; 
 			$config["next_link"]='Next';
 			$config["next_tag_open"]='<li>';
 			$config["next_tag_close"]='</li>';
@@ -61,13 +61,13 @@ class Campaign extends MX_Controller {
 
 			$start = (intval($page) - 1 )*$config['per_page'];
 
-			$query 	= $this->call_Mdl->fetch_details($config['per_page'],$start,$_POST['table']);
-			$fields = $this->get_query->get_Table_fields($_POST['table']);
+			$query 	= $this->call_Mdl->fetch_details($config['per_page'],$start,$_GET['table']);
+			$fields = $this->get_query->get_Table_fields($_GET['table']);
 			$output = array(
 				'pagination_link' => $this->pagination->create_links(),
-				'data_table' => $this->crud->switch_table_row($_POST['table'],$fields,$query)
+				'data_table' => $this->crud->switch_table_row($_GET['table'],$fields,$query),
+				'page' => $page
 			);
-
 
 			$output['token']=$this->security->get_csrf_hash();
 			echo json_encode($output);

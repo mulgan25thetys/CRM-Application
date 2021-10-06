@@ -9,8 +9,8 @@ class Agents extends MX_Controller {
 		parent::__construct();
 		$this->load->module('src');
 		$this->load->module('src/table');
-		$this->load->module('src/get_query');
-		$this->load->module('src/req_query');
+		$this->load->module('src/getters');
+		$this->load->module('src/requests');
 		$this->load->module('src/crud');
 		if ($this->session->userdata('online') == 'Y') {
 			$this->user_role = $this->session->userdata('role');
@@ -28,7 +28,7 @@ class Agents extends MX_Controller {
 
     	//traitement d'une requete dans le cas ou un formulaire a été soumis sur la page list
 		
-		$this->req_query->load_App_page('AUXICALL : Call','','',false,'call','agents','tpl_default',$agents_data,1);
+		$this->requests->load_App_page('AUXICALL : Call','','',false,'call','agents','tpl_default',$agents_data,1);
 	}
 }
 

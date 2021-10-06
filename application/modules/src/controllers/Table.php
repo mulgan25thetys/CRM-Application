@@ -10,7 +10,7 @@ class Table extends MX_Controller {
 		parent::__construct();
 		$this->load->model('mdl_tab');
     	$this->load->module('src/form');
-    	$this->load->module('src/get_query');
+    	$this->load->module('src/getters');
     	
 	}
 	//retourne les champs a afficher 

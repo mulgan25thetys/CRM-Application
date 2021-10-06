@@ -20,10 +20,10 @@ class Mdl_menu extends CI_Model {
 			return false;
 		}		
 	}
-	function getMenus_items($value=''){
+	function getMenus_items(){
 		return $this->db->get($this->getTable('menu'));
 	}
-	function get_sub_menu($parentid=''){
+	function get_sub_menu($parentid){
       return $this->db->where('parent_id',$parentid)->get($this->getTable('menu'));
 	}
 	function getParent_men($id){

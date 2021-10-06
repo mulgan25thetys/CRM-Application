@@ -9,8 +9,8 @@ class Sda extends MX_Controller {
 		parent::__construct();
 		$this->load->module('src');
 		$this->load->module('src/table');
-		$this->load->module('src/get_query');
-		$this->load->module('src/req_query');
+		$this->load->module('src/getters');
+		$this->load->module('src/requests');
 		$this->load->module('src/crud');
 		if ($this->session->userdata('online') == 'Y') {
 			$this->user_role = $this->session->userdata('role');
@@ -21,7 +21,7 @@ class Sda extends MX_Controller {
 	{
 		$dashboard_data['type'] = 'Analyse décisionnel';
 		$dashboard_data['data1'] ='Number SDA 5555-55555-555';
-		$this->req_query->load_App_page('AUXICALL : Call','','',false,'call','sda','tpl_default',$dashboard_data,1);
+		$this->requests->load_App_page('AUXICALL : Call','','',false,'call','sda','tpl_default',$dashboard_data,1);
 	}
 
 }

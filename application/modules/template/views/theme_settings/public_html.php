@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 	<?php $this->load->view('head')?>
-	<body class="no-skin">
+	<body class="no-skin" >
+		<div id="swup">
 		<?php $this->load->view('header')?>
 
 		<div class="main-container ace-save-state container" id="main-container">
@@ -63,7 +64,7 @@
 						<div class="row">
 							<div class="col-sm-1">
 							</div>
-							<div class="col-xs-12">
+							<div class="col-xs-12 transition-fade" id="n">
 								<!-- PAGE CONTENT BEGINS -->
 								<?php $this->load->view($module.'/'.$view_file);?>
 								<!-- PAGE CONTENT ENDS -->
@@ -85,5 +86,8 @@
 		<?php $this->load->view('view_js/default_js')?>
 
 		<?php $this->load->view('view_js/queryReq_js');?>
+		</div>
+
+		<script src="https://unpkg.com/swup@latest/dist/swup.min.js"></script> 
 	</body>
 </html>

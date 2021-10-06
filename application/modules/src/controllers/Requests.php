@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Req_query extends MX_Controller {
+class Requests extends MX_Controller {
 
 	function __construct()
 	{
@@ -9,7 +9,7 @@ class Req_query extends MX_Controller {
 		$this->load->model('mdl_src');
 		$this->load->module('template');
 		$this->load->module('src/menu');
-		$this->load->module('src/get_query');
+		$this->load->module('src/getters');
 	}
 
 	function redirect_to_page($module='',$page=''){
@@ -33,9 +33,8 @@ class Req_query extends MX_Controller {
 		if($submenu == '')
 			$data['sub_menu']  = '';
 		else{
-			$parent_page =($module == 'settings') ? $this->get_query->get_URl()[1] : $this->get_query->get_URl()[0] ;
-		    $menuid=$this->mdl_src->get_menu_id($parent_page);
-		    if ($menuid == $submenu) {
+			$parent_page =($module == 'settings') ? $this->getters->get_URl()[1] : $this->getters->get_URl()[0] ;
+		    if ($submenu) {
 		    	if($module == 'settings'){
 		    		$data['sub_menu'] = $this->menu->get_config_menu($parent_page,$submenu);
 		    	}else{
@@ -47,7 +46,7 @@ class Req_query extends MX_Controller {
 			$data['parent_page'] = $parent_page;
 		}
 		$data['datapage'] = $datapage;
-		
+	
         echo $this->template->$tpl($data);
 	}
 
@@ -56,7 +55,7 @@ class Req_query extends MX_Controller {
 		$this->load_App_page('AUXICALL : CRM','','',false,'src','home','tpl_default');
 	}
 	//permet de faire une statistique sur les données d'une table
-	function statistique($value='')
+	function statistic($value='')
 	{
 		if ($this->input->is_ajax_request()) {
 			$nbr_total = $this->mdl_src->count_all($_GET['table']);

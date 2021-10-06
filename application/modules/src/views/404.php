@@ -51,7 +51,7 @@
 				Go Back
 			</a>
 
-			<a href="#" class="btn btn-primary">
+			<a href="<?php echo base_url();?>" class="btn btn-primary">
 				<i class="ace-icon fa fa-tachometer"></i>
 				Dashboard
 			</a>

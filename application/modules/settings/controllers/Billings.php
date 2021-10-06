@@ -5,17 +5,17 @@ class Billings extends MX_Controller {
 
 	private $user_role = 0;
 	private $menuid = 0;
-	public function __construct()
+	function __construct()
 	{
 		parent::__construct();
 		$this->load->model('mdl_settings');
 
 		$this->load->module('src');
 		$this->load->module('src/table');
-		$this->load->module('src/get_query');
-		$this->load->module('src/req_query');
+		$this->load->module('src/getters');
+		$this->load->module('src/requests');
 		$this->load->module('src/crud');
-		if ($this->session->userdata('online') == 'Y') {
+		if ($this->session->userdata('online')) {
 			$this->user_role = $this->session->userdata('role');
 		}
 
@@ -25,12 +25,12 @@ class Billings extends MX_Controller {
 	function invoices()
 	{
 		$invoice_data['table_analytic'] = array('campaign','user');
-		$this->req_query->load_App_page('AUXICALL : Billings','','',false,'settings','billings/invoices','tpl_settings',$invoice_data,$this->menuid);
+		$this->requests->load_App_page('AUXICALL : Billings','','',false,'settings','billings/invoices','tpl_settings',$invoice_data,22);
 	}
 
 	function faq(){
 		$invoice_data['table_analytic'] = array('campaign','user');
-		$this->req_query->load_App_page('AUXICALL : Billings','','',false,'settings','billings/faq','tpl_settings',$invoice_data,$this->menuid);
+		$this->requests->load_App_page('AUXICALL : Billings','','',false,'settings','billings/faq','tpl_settings',$invoice_data,22);
 	}
 
 }

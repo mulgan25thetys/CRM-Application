@@ -1,17 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Emailing extends MX_Controller {
+class Dashboard extends MX_Controller {
 
-	public function __construct()
+	function __construct()
 	{
 		parent::__construct();
-		$this->load->module('src/tableau');
-		$this->load->module('src/get_query');
-		$this->load->module('src/req_query');
+		$this->load->module('src/table');
+		$this->load->module('src/getters');
+		$this->load->module('src/requests');
 		$this->load->module('src/crud');
 	}
-	public function index()
+
+	function index()
 	{
 		$this->dashboard();
 	}
@@ -20,7 +21,7 @@ class Emailing extends MX_Controller {
 		$dashboard_data['type'] = 'Analyse décisionnel';
 		$dashboard_data['data1'] ='info campagne';
 		$dashboard_data['campagne_link'] = 'campaign';
-		$this->req_query->load_App_page('AUXICALL : E-Mailing','','',false,'emailing','dashboard','tpl_default',$dashboard_data,3);
+		$this->requests->load_App_page('AUXICALL : E-Mailing','','',false,'emailing','dashboard','tpl_default',$dashboard_data,3);
 	}
 
 }

@@ -10,7 +10,7 @@ class Mdl_src extends CI_Model {
 	{
 		parent::__construct();
 
-		if ($this->session->userdata('online') != null && $this->session->userdata('online') == 'Y') {
+		if ($this->session->userdata('online') != null) {
 			$this->user = $this->session->userdata('username');
 			$this->manager = $this->session->userdata('manager');
 			$this->role = $this->session->userdata('role');

@@ -1,6 +1,6 @@
 <div id="navbar" class="navbar navbar-default    navbar-collapse       h-navbar ace-save-state  navbar-fixed-top">
 	<div class="navbar-container ace-save-state container" id="navbar-container">
-		<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
+		<button type="button" class="navbar-toggle menu-toggler pull-left transition-fade" id="menu-toggler" data-target="#sidebar">
 			<span class="sr-only">Toggle sidebar</span>
 
 			<span class="icon-bar"></span>

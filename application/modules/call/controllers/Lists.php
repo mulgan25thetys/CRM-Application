@@ -9,8 +9,8 @@ class Lists extends MX_Controller {
 		parent::__construct();
 		$this->load->module('src');
 		$this->load->module('src/table');
-		$this->load->module('src/get_query');
-		$this->load->module('src/req_query');
+		$this->load->module('src/getters');
+		$this->load->module('src/requests');
 		$this->load->module('src/crud');
 		if ($this->session->userdata('online') == 'Y') {
 			$this->user_role = $this->session->userdata('role');
@@ -35,7 +35,7 @@ class Lists extends MX_Controller {
 			$page = $this->uri->segment(3);
 			Modules::run('src/crud/read',$page);
 		} else {
-			$this->req_query->load_App_page('AUXICALL : Call','','',false,'call','lists','tpl_default',$lists_data,1);
+			$this->requests->load_App_page('AUXICALL : Call','','',false,'call','lists','tpl_default',$lists_data,1);
 		}		
 	}
 }

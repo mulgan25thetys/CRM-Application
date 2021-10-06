@@ -36,7 +36,7 @@
 
     function regenerate_token(){
         $.ajax({
-            url:'<?php echo base_url();?>src/get_query/get_token',
+            url:'<?php echo base_url();?>src/getters/get_token',
             dataType:'json',
             success:function(resp) {
                 $(".csrfName").val(resp.token);
@@ -47,6 +47,18 @@
 
     $(document).ready(function(){
 
+        $(document).find('#simple-table').DataTable( {
+                    bAutoWidth: false,
+                    "aoColumns": [
+                      { "bSortable": false },
+                      null, null,null, null, null,
+                      { "bSortable": false }
+                    ],
+                    "aaSorting": [],
+                    select: {
+                        style: 'multi'
+                    }
+                } );
         //multiple selection
         $(document).on('change',"#checkall",function() {
             $(document).find('.checkitem').prop("checked",$(this).prop("checked"));
@@ -274,7 +286,7 @@
             return $(this).val();
         }).get().join('/');
 
-        load_query_ajax_request('<?= base_url() ?>src/crud/delete_multiple','POST',{id:id,table:tablename},'Suppresion multiple');
+        load_query_ajax_request('<?= base_url() ?>src/crud/delete_multiple','GET',{id:id,table:tablename},'Suppresion multiple');
     }
 
     function load_query_ajax_request(url,method,data,type){

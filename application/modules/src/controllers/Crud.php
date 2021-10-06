@@ -8,8 +8,8 @@ class Crud extends MX_Controller {
 		parent::__construct();
 		$this->load->model('mdl_src');
 		//chargement des modules utils pour les traitements
-		$this->load->module('src/get_query');
-		$this->load->module('src/req_query');
+		$this->load->module('src/getters');
+		$this->load->module('src/requests');
 	}
 	//permet de retourner un enregistrement demandé a partir de son id
 	function get_entry(){
@@ -259,7 +259,7 @@ class Crud extends MX_Controller {
 			$start = (intval($page) - 1 )*$config['per_page'];
 
 			$query 	= $this->mdl_src->fetch_details($config['per_page'],$start,$_POST['table']);
-			$fields = $this->get_query->get_Table_fields($_POST['table']);
+			$fields = $this->getters->get_Table_fields($_POST['table']);
 			$output = array(
 				'pagination_link' => $this->pagination->create_links(),
 				'data_table' => $this->switch_table_row($_POST['table'],$fields,$query)
@@ -277,7 +277,7 @@ class Crud extends MX_Controller {
 
 		$data = array('response' => 'error','result'=>array(),'token','');
 		$query 	= $this->mdl_src->search_entry($post['table'],$post['query']);
-		$fields = $this->get_query->get_Table_fields($post['table']);
+		$fields = $this->getters->get_Table_fields($post['table']);
 		$data['response'] = 'success';
 		$data['result']   = $this->switch_table_row($post['table'],$fields,$query);
 
@@ -304,7 +304,7 @@ class Crud extends MX_Controller {
 	function switch_table_row($table,$tablefields,$query)
 	{
 		$output='';
-		$output.='<table id="simple-table" table-name="'.$table.'" class="table dataTable">';
+		$output.='<table id="simple-table" table-name="'.$table.'" class="table table-striped dataTable">';
 		$output.="<thead>";
 				$output.='<tr role="row">';
 				$output.= ' <th class="center">

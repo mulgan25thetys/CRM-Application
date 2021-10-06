@@ -9,7 +9,7 @@ class Auth extends MX_Controller {
 		parent::__construct();
 
 		$this->load->model('Auth_Mdl');
-		$this->load->module('src/req_query');
+		$this->load->module('src/requests');
 	}
 
 	function index()
@@ -28,25 +28,26 @@ class Auth extends MX_Controller {
 				$this->session->unset_userdata('locked');
 			}
 		}
-		$this->req_query->load_App_page('Login','Please Enter Your Information','register',true,'auth','login','tpl_auth');
+		$this->requests->load_App_page('Login','Please Enter Your Information','register',true,'auth','login','tpl_auth');
 	}
 	function validation(){ 
-		$this->req_query->load_App_page('Valid Account','Validation','login',false,'auth','otp','tpl_auth');	
+		$this->requests->load_App_page('Valid Account','Validation','login',false,'auth','otp','tpl_auth');	
 	}
 	function register()
 	{
-		$this->req_query->load_App_page('Register','New User Registration','login',false,'auth','register','tpl_auth');
+		$this->requests->load_App_page('Register','New User Registration','login',false,'auth','register','tpl_auth');
 	}
 	function reset_password(){
-        $this->req_query->load_App_page('Reset password','Retrieve Password','login',false,'auth','reset_password','tpl_auth');
+        $this->requests->load_App_page('Reset password','Retrieve Password','login',false,'auth','reset_password','tpl_auth');
 	}
 	function reset_password_update(){
-        $this->req_query->load_App_page('Reset password','Update Password','login',false,'auth','changepassword_form','tpl_auth');
+        $this->requests->load_App_page('Reset password','Update Password','login',false,'auth','changepassword_form','tpl_auth');
 	}
 	function account()
 	{
 		$userdta=$this->Auth_Mdl->getUser($this->session->userdata('username'))->result();
-		$this->req_query->load_App_page('My account','My account','',false,'auth','account','tpl_default',$userdta);
+		$this->session->set_flashdata('page_active', 'My profile');
+		$this->requests->load_App_page('My account','My account','',false,'auth','account','tpl_default',$userdta);
 	}
 
     function submit_login($value='')
@@ -101,7 +102,7 @@ class Auth extends MX_Controller {
 			
 		$this->session->set_flashdata('you_logged', ' Welcome back! '.$username);
 		$this->Auth_Mdl->user_is_online($iduser,'Y');//l'utilisateur est en ligne
-		$this->req_query->redirect_to_page('','home');
+		$this->requests->redirect_to_page('','home');
     }
     function panel_user($username){
     	$query = $this->Auth_Mdl->getUser($username);
@@ -296,7 +297,7 @@ class Auth extends MX_Controller {
 				$this->Auth_Mdl->active_account($this->session->userdata('emaillogin'));
 			}
 		}
-		$this->req_query->redirect_to_page('call','dashboard');
+		$this->requests->redirect_to_page('call','dashboard');
     }
     function login_is_attempted(){
     	$data = array(

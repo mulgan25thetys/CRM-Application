@@ -8,8 +8,8 @@ class Form extends MX_Controller {
     	parent::__construct();
   
     	$this->load->model('mdl_form');
-    	$this->load->module('src/req_query');
-    	$this->load->module('src/get_query');
+    	$this->load->module('src/requests');
+    	$this->load->module('src/getters');
     }
 
     //chargement du formulaire

@@ -9,10 +9,10 @@ class Menu extends MX_Controller {
 	{
 		parent::__construct();
 		
-		$this->load->model('Mdl_menu');
-		$this->load->module('src/get_query');
+		$this->load->model('mdl_menu');
+		$this->load->module('src/getters');
 
-		$this->url = $this->get_query->get_URl();
+		$this->url = $this->getters->get_URl();
 		if ($this->session->userdata('online') == 'Y') {
 			$this->user_role = $this->session->userdata('role');
 		}
@@ -20,10 +20,12 @@ class Menu extends MX_Controller {
 
 	function check_user_menu($query){
 		$new_menu = array();
-		if ($this->user_role != 3) {
+		if ($this->user_role < 3) {
 			for ($i=0; $i < count($query); $i++) { 
 				if($query[$i]['page'] == 'agents'){
 					unset($query[$i]);
+					$new_menu = $query;
+				}else{
 					$new_menu = $query;
 				} 
 			}
@@ -33,27 +35,41 @@ class Menu extends MX_Controller {
 		return $new_menu;
 	}
 
+	function debug()
+	{	
+		$new_menu = array();
+		$query = $this->getters->get_Menu();
+		for ($i=0; $i < count($query); $i++) { 
+			if ($query[$i]['parent_id'] != 1) {
+				unset($query[$i]);
+				$new_menu = $query;
+			}
+		}
+		echo "<pre>";
+		print_r ($new_menu);
+		echo "</pre>";
+	}
 	//retourner le menu par defaut qui sont les modules
 	function get_default_Menu($defaultpage=''){
-		$query = $this->Mdl_menu->getMenus_items();
+		$query = $this->mdl_menu->getMenus_items(); 
        	$Outside_default_menu = "";
 
        	if ($query->num_rows() > 0) {
        		$Outside_default_menu.= '<nav role="navigation" class="navbar-menu pull-left collapse navbar-collapse">
        			<ul class="nav navbar-nav">';
-       		    foreach ($query->result() as $value) {
+       		    foreach ($query->result_array() as $value) {
        		    	//Activer un desactiver un menu par defaut
-       		    	if($value->parent_id == 0 && $value->title != 'Settings'){	
-       		    		switch ($value->status) {
+       		    	if($value['parent_id'] == 0 && $value['title'] != 'Settings'){	
+       		    		switch ($value['status']) {
        		    				case 1:
-       		    						$Outside_default_menu.=$this->active_default_menu($value->title,$value->page,$value->icon,$defaultpage);
+       		    						$Outside_default_menu.=$this->active_default_menu($value['title'],$value['page'],$value['icon'],$defaultpage);
        		    					break;
        		    				case 0:
-       		    					$Outside_default_menu.=$this->inactive_default_menu($value->title,$value->icon);
+       		    					$Outside_default_menu.=$this->inactive_default_menu($value['title'],$value['icon']);
        		    					break;
        		    				
        		    				default:
-       		    				        $Outside_default_menu.=$this->inactive_default_menu($value->title,$value->icon);
+       		    				        $Outside_default_menu.=$this->inactive_default_menu($value['title'],$value['icon']);
        		    					break;
        		    			}	
 					}
@@ -106,12 +122,14 @@ class Menu extends MX_Controller {
 
 	//retourne le sous menu d'un menu 
 	function get_sub_default_menu($parent='',$parentid=''){
-		$query = $this->Mdl_menu->get_sub_menu($parentid);
+		$query = $this->mdl_menu->get_sub_menu($parentid);
        	$Outside_sub_menu     = "";
-       	if ($query->num_rows()> 0) {
-       		
-       		$submenu = $this->check_user_menu($query->result_array());
-       		$Outside_sub_menu.='<ul class="nav nav-list">';
+       	$newSeb_menu = array();
+
+       	if ($query->num_rows() > 0 && $parentid !='') {
+   				$submenu = $this->check_user_menu($query->result_array());
+
+   				$Outside_sub_menu.='<ul class="nav nav-list">';
        			foreach($submenu as $value) {
        				if ($this->url[1] == $value['page']) {
        					$Outside_sub_menu.='<li class="hover active"><a class="navigation" href="';
@@ -133,6 +151,7 @@ class Menu extends MX_Controller {
        			}
        		$Outside_sub_menu.=$this->getCredit_Cart();
        		$Outside_sub_menu.='</ul>';
+       
        	}else {
        		$Outside_sub_menu = '<div class="alert alert-info">Aucun sous menu existant!</div>';
        	}
@@ -142,7 +161,7 @@ class Menu extends MX_Controller {
 	//retourner le bloc de credit utilisateur
 	function getCredit_Cart(){
 		$creditcart ='';	
-		$creditcart.='<div 
+		$creditcart.='<div id="credit"
        				style=" 
        					position:absolute;
        					background:green; 
@@ -161,21 +180,21 @@ class Menu extends MX_Controller {
 
 	//retourne le sous menu d'un sous menu en cas de menu deroulant
 	function get_sub_menu($parentid){
-		$query = $this->Mdl_menu->get_sub_menu($parentid);
+		$query = $this->mdl_menu->get_sub_menu($parentid);
        	$sub_menu = "";
 
        	if ($query->num_rows() > 0) {
        		$sub_menu.='<ul class="submenu">';
-       		foreach ($query->result() as $value) {
+       		foreach ($query->result_array() as $value) {
        			$sub_menu.='<li class="hover"><a class="navigation" href="';
-       			if($value->page != null){
-       				$sub_menu.=base_url()."auth/".$value->page;
+       			if($value['page'] != null){
+       				$sub_menu.=base_url()."auth/".$value['page'];
        			}
    				else{
                 	$sub_menu.="#";
                 }
        			$sub_menu.='"><i class="menu-icon fa fa-caret-right"></i>';
-       			$sub_menu.=$value->title;
+       			$sub_menu.=$value['title'];
        			$sub_menu.='</a><b class="arrow"></b></li>';
        		}
        		$sub_menu.='</ul>';
@@ -185,9 +204,9 @@ class Menu extends MX_Controller {
 
 	//retourne le menu de la configuration (paramétres)
 	function get_config_menu($parent='',$parentid=''){
-		$query = $this->Mdl_menu->get_sub_menu($parentid);
+		$query = $this->mdl_menu->get_sub_menu($parentid);
        	$Outside_sub_menu     = "";
-       	if ($query->num_rows()> 0) {
+       	if ($query->num_rows() > 0) {
        		
        		$submenu = $this->check_user_menu($query->result_array());
        		$Outside_sub_menu.='<ul class="nav nav-list">';

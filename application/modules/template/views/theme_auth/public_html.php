@@ -1,6 +1,7 @@
 <?php $this->load->view('head')?> 
 
 	<body class="login-layout">
+		<div id="swupd">
 		<div class="main-container">
 			<div class="main-content">
 				<div class="row">
@@ -24,13 +25,17 @@
 				</div><!-- /.row -->
 			</div><!-- /.main-content -->
 		</div><!-- /.main-container -->
-
+		</div>
 		<!-- basic scripts -->
 
 		<!--[if !IE]> -->
 		<script src="<?= base_url()?>assets/js/jquery-2.1.4.min.js"></script>
 		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+		<script src="https://unpkg.com/swup@latest/dist/swup.min.js"></script> 
+		<script type="text/javascript">
+			//const swup = new Swup(); // only this line when included with script tag*
+		</script>
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 

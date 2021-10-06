@@ -10,8 +10,8 @@ class Campaign extends MX_Controller {
 		$this->load->model('call_Mdl');
 		$this->load->module('src');
 		$this->load->module('src/table');
-		$this->load->module('src/get_query');
-		$this->load->module('src/req_query');
+		$this->load->module('src/getters');
+		$this->load->module('src/requests');
 		$this->load->module('src/crud');
 		if ($this->session->userdata('online') == 'Y') {
 			$this->user_role = $this->session->userdata('role');
@@ -28,7 +28,7 @@ class Campaign extends MX_Controller {
     	$compaign_data['table'] = $this->table->load_table($table,$campaign_data);
 		
 		//traitement d'une requete dans le cas ou un formulaire a été soumis sur la page campaigne 
-		$this->req_query->load_App_page('AUXICALL : Call','','',false,'call','campaign','tpl_default',$compaign_data,1);
+		$this->requests->load_App_page('AUXICALL : Call','','',false,'call','campaign','tpl_default',$compaign_data,1);
 	}
 
 	function read(){
@@ -62,7 +62,7 @@ class Campaign extends MX_Controller {
 			$start = (intval($page) - 1 )*$config['per_page'];
 
 			$query 	= $this->call_Mdl->fetch_details($config['per_page'],$start,$_GET['table']);
-			$fields = $this->get_query->get_Table_fields($_GET['table']);
+			$fields = $this->getters->get_Table_fields($_GET['table']);
 			$output = array(
 				'pagination_link' => $this->pagination->create_links(),
 				'data_table' => $this->crud->switch_table_row($_GET['table'],$fields,$query),

@@ -1,24 +1,41 @@
 <script type="text/javascript">
 	var current_url = window.location.href;
 
-	$(document).ready(function (argument) {
-		navigation(current_url);
-		var homepage  = '<?php echo base_url(); ?>';
-		if(homepage === current_url){
-			$("#menu-toggler").hide();
-		}
-		//apres le chargement de la page lancer la function Statistic_table pour recupere les données d'une table afin de faire la statique
-		Statistic_table('campaign');
-		Statistic_table('user');
-	});	
+	navigation(current_url);
+	
+	var homepage  = '<?php echo base_url(); ?>';
+	if(homepage == current_url || document.title == "Page not found!"){
+		$("#menu-toggler").hide();
+	}
+	//apres le chargement de la page lancer la function Statistic_table pour recupere les données d'une table afin de faire la statique
+	Statistic_table('campaign');
+	Statistic_table('user');
 
+
+	function load_ajax_request(url) {
+        $.ajax({
+        	url:url,
+        	method:'GET',
+        	dataType:'text',
+        	error:function(data){
+        		debug(data.status);
+        		if(data.status == 404){
+                    window.location = '<?= base_url() ?>src/errors';
+        		}
+        	},
+        	success:function(response){
+        		window.location = url;
+        	}
+        });
+    }
+	//navigation avec javascript
 	function navigation(current_url){
-		$(document).on('click','.navigation',function(e){
+		$(document).find('.navigation').on('click',function(e){
 			e.preventDefault();
+			
 			var this_link_url    = $(this).attr('href');
-
-			if(current_url !== this_link_url){
-				location.href = this_link_url;
+			if(current_url != this_link_url || current_url != this_link_url+'#'){
+				load_ajax_request(this_link_url);
 			}
 		});
 	}
@@ -33,7 +50,7 @@
 	//permet de lancer une requeste ajax pour recupere les infos de maniere stastitiques sur une table donnée
 	function Statistic_table(table){
 		$.ajax({
-			url:'<?= base_url() ?>src/req_query/statistique',//url de recherche a laquelle la requete est envoyé
+			url:'<?= base_url() ?>src/requests/statistic',//url de recherche a laquelle la requete est envoyé
 			method:'GET',//methode d'envoie de la requete
 			dataType:'json', //type de retour de la reponse
 			data:{table: table},//les données a envoyer 
@@ -46,4 +63,7 @@
 		});
 	}
 
+	function debug(value){
+		console.log(value);
+	}
 </script>

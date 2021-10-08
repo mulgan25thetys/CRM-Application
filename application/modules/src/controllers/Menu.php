@@ -13,7 +13,7 @@ class Menu extends MX_Controller {
 		$this->load->module('src/getters');
 
 		$this->url = $this->getters->get_URl();
-		if ($this->session->userdata('online') == 'Y') {
+		if ($this->session->userdata('online')) {
 			$this->user_role = $this->session->userdata('role');
 		}
 	}

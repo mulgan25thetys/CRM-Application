@@ -64,7 +64,7 @@
 						<div class="row">
 							<div class="col-sm-1">
 							</div>
-							<div class="col-xs-12 transition-fade" id="n">
+							<div class="col-xs-12 transition-fade" id="contents">
 								<!-- PAGE CONTENT BEGINS -->
 								<?php $this->load->view($module.'/'.$view_file);?>
 								<!-- PAGE CONTENT ENDS -->

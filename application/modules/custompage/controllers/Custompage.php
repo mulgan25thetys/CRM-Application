@@ -12,27 +12,7 @@ class Custompage extends MX_Controller {
 		//verifier la connexion
 		$this->getters->check_cnx();
 	}
-	// function check()
-	// {
-	// 	if( ini_get('allow_url_fopen') ) {
-	// 	    die('allow_url_fopen is enabled. file_get_contents should work well');
-	// 	} else {
-	// 	    die('allow_url_fopen is disabled. file_get_contents would not work');
-	// 	}
-	// 	// $headers = get_headers(base_url().'auth/login');
-	// 	// // echo "<pre>";
-	// 	// // print_r ();
-	// 	// // echo "</pre>";
-	// 	// if ($headers[0] == 'HTTP/1.1 200 OK') {
-	// 	//  	echo "<pre>";
-	// 	//  	print_r ($headers);
-	// 	//  	echo "</pre>";
-	// 	// }
-
-	// 	// if ($headers[0] == 'HTTP/1.1 301 Moved Permanently') {
-	// 	// 	//moved or redirect page
-	// 	// }
-	// }
+	
 	function index()
 	{
 		$this->view();

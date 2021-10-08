@@ -15,12 +15,18 @@
 	function load_ajax_request(url) {
         $.ajax({
         	url:url,
-        	method:'GET',
+        	method:'GET', 
         	dataType:'text',
         	error:function(data){
         		debug(data.status);
         		if(data.status == 404){
-                    window.location = '<?= base_url() ?>src/errors';
+        			$.get('<?=base_url() ?>src/errors', function( data ) {
+        				const state = { 'page_id': 1, 'user_id': 5 };
+						const title = 'Page not found';
+        				history.pushState(state, title, url);
+        				$(document).find("#sidebar").removeClass("display");
+						$(document).find("#contents").html(data);
+					});
         		}
         	},
         	success:function(response){

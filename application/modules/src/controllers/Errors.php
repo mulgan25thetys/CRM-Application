@@ -10,7 +10,7 @@ class Errors extends MX_Controller {
 	}
 	function index()
 	{
-		$this->requests->load_App_page('Page not found!','','',false,'src','404','tpl_default','',0);
+		$this->load->view('404');
 	}
 
 }

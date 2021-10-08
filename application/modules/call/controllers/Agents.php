@@ -12,14 +12,14 @@ class Agents extends MX_Controller {
 		$this->load->module('src/getters');
 		$this->load->module('src/requests');
 		$this->load->module('src/crud');
-		if ($this->session->userdata('online') == 'Y') {
+		if ($this->session->userdata('online')) {
 			$this->user_role = $this->session->userdata('role');
 		}
 	}
 
 	function index(){
 		if ($this->user_role != 3) {
-			http_response_code(404);
+			http_response_code(403);
 			exit();
 		}
 		$table = 'user';
